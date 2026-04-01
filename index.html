@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LSBU VR Campus Tour — Open Day 2026</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar" id="navbar">
+    <img src="assets/LSBU-Logo.png" alt="London South Bank University" class="nav-logo" />
+    <a href="menu.html" class="nav-cta">Explore Campus →</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+
+    <!-- Animated background particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Floating orbs -->
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="hero-inner">
+
+        <!-- LEFT -->
+        <div class="hero-content" id="hero-content">
+            <div class="badge reveal" style="--d:0ms">
+                <span class="badge-dot"></span>
+                LSBU Open Day 2026
+            </div>
+
+            <h1 class="reveal" style="--d:120ms">
+                Explore Our Campus<br />
+                <span class="hero-gradient">In Virtual Reality</span>
+            </h1>
+
+            <p class="hero-sub reveal" style="--d:240ms">
+                Discover London South Bank University's key buildings through
+                immersive 360° video tours and photo galleries.
+                No headset required — works on any device.
+            </p>
+
+            <div class="hero-actions reveal" style="--d:360ms">
+                <a href="menu.html" class="btn-primary">
+                    <span>Start Exploring</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="device-note">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+                    Chrome · Safari · Firefox
+                </div>
+            </div>
+
+            <!-- Context strip -->
+            <div class="context-strip reveal" style="--d:480ms">
+                <div class="ctx-item">
+                    <span class="ctx-icon">📍</span>
+                    <span>Southwark, London</span>
+                </div>
+                <div class="ctx-sep"></div>
+                <div class="ctx-item">
+                    <span class="ctx-icon">🎓</span>
+                    <span>Prospective students &amp; stakeholders</span>
+                </div>
+                <div class="ctx-sep"></div>
+                <div class="ctx-item">
+                    <span class="ctx-icon">🚫🥽</span>
+                    <span>No headset needed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: animated globe -->
+        <div class="hero-visual reveal" style="--d:200ms" id="hero-visual">
+            <div class="globe-wrap">
+                <!-- Orbit rings -->
+                <div class="orbit orbit1">
+                    <div class="orbit-dot"></div>
+                </div>
+                <div class="orbit orbit2">
+                    <div class="orbit-dot dot2"></div>
+                </div>
+                <div class="orbit orbit3">
+                    <div class="orbit-dot dot3"></div>
+                </div>
+
+                <!-- Core sphere -->
+                <div class="globe-core" id="globe-core">
+                    <div class="globe-shine"></div>
+                    <span class="globe-label">360°</span>
+                    <span class="globe-sub">VR Tour</span>
+                </div>
+
+                <!-- Floating stat chips -->
+                <div class="chip chip1">
+                    <span class="chip-num">4</span>
+                    <span class="chip-lbl">Sites</span>
+                </div>
+                <div class="chip chip2">
+                    <span class="chip-num">5</span>
+                    <span class="chip-lbl">Videos</span>
+                </div>
+                <div class="chip chip3">
+                    <span class="chip-num">16</span>
+                    <span class="chip-lbl">Photos</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar reveal" style="--d:600ms">
+        <div class="stat-item">
+            <span class="stat-num" data-target="4">0</span>
+            <span class="stat-lbl">Campus Sites</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+            <span class="stat-num" data-target="5">0</span>
+            <span class="stat-lbl">360° Videos</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+            <span class="stat-num" data-target="16">0</span>
+            <span class="stat-lbl">360° Photos</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+            <span class="stat-num" data-target="100">0</span>
+            <span class="stat-lbl">% Browser-based</span>
+        </div>
+    </div>
+
+</section>
+
+<script>
+/* ── Intersection observer — reveal on scroll ── */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.style.animationDelay = e.target.style.getPropertyValue('--d') || '0ms';
+            e.target.classList.add('in-view');
+            io.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.15 });
+reveals.forEach(el => io.observe(el));
+
+/* ── Counter animation ── */
+function animateCounters() {
+    document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+        const target = +el.dataset.target;
+        const suffix = target === 100 ? '%' : '';
+        let start = null;
+        const duration = 1200;
+        const step = ts => {
+            if (!start) start = ts;
+            const progress = Math.min((ts - start) / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(ease * target) + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = target + suffix;
+        };
+        requestAnimationFrame(step);
+    });
+}
+
+const statsBar = document.querySelector('.stats-bar');
+const statsIo = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+        animateCounters();
+        statsIo.disconnect();
+    }
+}, { threshold: 0.5 });
+statsIo.observe(statsBar);
+
+/* ── Particle field ── */
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+const container = document.getElementById('particles');
+container.appendChild(canvas);
+
+function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const PARTICLE_COUNT = 55;
+const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.8 + 0.4,
+    dx: (Math.random() - 0.5) * 0.35,
+    dy: (Math.random() - 0.5) * 0.35,
+    opacity: Math.random() * 0.45 + 0.1
+}));
+
+function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(139, 90, 43, ${p.opacity})`;
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width)  p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ── Parallax on globe ── */
+document.addEventListener('mousemove', e => {
+    const globe = document.getElementById('globe-core');
+    if (!globe) return;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const dx = (e.clientX - cx) / cx;
+    const dy = (e.clientY - cy) / cy;
+    globe.style.transform = `translate(${dx * 8}px, ${dy * 8}px)`;
+});
+
+/* ── Navbar scroll shadow ── */
+window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>360° Photos — LSBU VR Campus Tour</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- A-Frame 1.5 -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+    a-scene { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Loading 360° photo...</p>
+  </div>
+
+  <!-- A-Frame 360° Photo Scene -->
+  <a-scene
+    vr-mode-ui="enabled: true"
+    loading-screen="dotsColor: #E30613; backgroundColor: #1A1A2E"
+    renderer="colorManagement: true"
+  >
+    <!-- sky element — src swapped by JS when navigating photos -->
+    <a-sky id="photo-sky" src="" rotation="0 -90 0"></a-sky>
+
+    <!-- Camera -->
+    <a-camera>
+      <a-cursor color="#E30613" fuse="false"></a-cursor>
+    </a-camera>
+
+  </a-scene>
+
+  <!-- Scene overlay UI -->
+  <div class="scene-ui">
+
+    <!-- Top bar -->
+    <div class="scene-ui-top">
+      <div>
+        <div class="scene-title" id="scene-title">Loading...</div>
+        <div class="scene-subtitle">360° Photo Gallery</div>
+      </div>
+      <a href="../menu.html" class="ui-btn">✕ Menu</a>
+    </div>
+
+    <!-- Bottom bar: back + photo nav + video link -->
+    <div class="scene-ui-bottom">
+      <a id="back-link" href="../menu.html" class="ui-btn">← Back</a>
+
+      <!-- Photo navigation -->
+      <div class="photo-nav">
+        <button class="ui-btn" onclick="changePhoto(-1)">‹</button>
+        <span class="photo-counter" id="photo-counter">1 / 4</span>
+        <button class="ui-btn" onclick="changePhoto(1)">›</button>
+      </div>
+
+      <a id="video-link" href="#" class="ui-btn red">▶ Video</a>
+    </div>
+
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const siteId = getSiteId();
+    const site   = getSite(siteId);
+
+    document.title = site.name + " Photos — LSBU VR";
+    document.getElementById("scene-title").textContent = site.name;
+    document.getElementById("video-link").href = "video.html?site=" + siteId;
+
+    // Init photo viewer with this site's photos
+    initPhotoViewer(siteId);
+
+    // Hide loader once scene ready
+    const sceneEl = document.querySelector("a-scene");
+    sceneEl.addEventListener("loaded", hideLoader);
+    setTimeout(hideLoader, 5000);
+
+    // Keyboard arrow support
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft")  changePhoto(-1);
+      if (e.key === "ArrowRight") changePhoto(1);
+    });
+  </script>
+
+</body>
+</html>

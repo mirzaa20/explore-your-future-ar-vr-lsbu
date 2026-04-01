@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site 1 — LSBU VR Tour</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        html, body { background: #2C1A0E; overflow: hidden; }
+        a-scene    { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loading-badge">LSBU VR Campus Tour</div>
+        <div class="loading-title" id="loading-title">Site 1</div>
+        <div class="loading-sub">Loading immersive environment...</div>
+        <div class="loading-bar-track">
+            <div class="loading-bar-fill"></div>
+        </div>
+    </div>
+
+    <!-- A-FRAME SCENE -->
+    <a-scene loading-screen="enabled: false" vr-mode-ui="enabled: true"
+             renderer="antialias: true; colorManagement: true">
+
+        <a-assets timeout="30000">
+            <!-- VIDEO — swap src for real file when teammates deliver -->
+            <video id="scene-video"
+                   crossorigin="anonymous"
+                   loop="false"
+                   preload="auto"
+                   playsinline
+                   webkit-playsinline>
+            </video>
+        </a-assets>
+
+        <!-- 360° video sphere -->
+        <a-videosphere id="video-sphere" src="#scene-video"
+                       rotation="0 -90 0" visible="true">
+        </a-videosphere>
+
+        <!-- 360° photo sky — hidden until Photos tab selected -->
+        <a-sky id="photo-sky" rotation="0 -90 0" visible="false"></a-sky>
+
+        <a-camera>
+            <a-cursor color="#C8956C" fuse="false"
+                      raycaster="objects: .clickable">
+            </a-cursor>
+        </a-camera>
+
+    </a-scene>
+
+    <!-- UI OVERLAY -->
+    <div id="ui-overlay">
+
+        <div class="top-bar">
+            <div class="site-label">
+                <span class="site-label-tag">Now Exploring</span>
+                <span class="site-label-name" id="site-name">Loading...</span>
+            </div>
+            <div class="top-controls">
+                <button class="ctrl-btn" id="mute-btn" title="Mute / Unmute">🔊</button>
+                <button class="ctrl-btn" id="fs-btn"   title="Fullscreen">⛶</button>
+            </div>
+        </div>
+
+        <div class="drag-hint">🖱 Drag to look around</div>
+
+        <div class="bottom-bar">
+            <a href="../menu.html" class="back-btn">← Back to Sites</a>
+
+            <div class="tab-switcher">
+                <button class="tab-btn active" id="tab-video"  onclick="switchTab('video')">▶ Video</button>
+                <button class="tab-btn"        id="tab-photos" onclick="switchTab('photos')">📷 Photos</button>
+            </div>
+
+            <div class="photo-nav" id="photo-nav">
+                <button class="nav-arrow" onclick="changePhoto(-1)">‹</button>
+                <span class="photo-counter" id="photo-counter">1 / 4</span>
+                <button class="nav-arrow" onclick="changePhoto(1)">›</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>initScene(1);</script>
+
+</body>
+</html>

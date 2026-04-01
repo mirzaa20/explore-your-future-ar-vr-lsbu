@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>360° Video — LSBU VR Campus Tour</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- A-Frame 1.5 -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+    a-scene { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Loading 360° experience...</p>
+  </div>
+
+  <!-- A-Frame 360° Video Scene -->
+  <a-scene
+    vr-mode-ui="enabled: true"
+    loading-screen="dotsColor: #E30613; backgroundColor: #1A1A2E"
+    renderer="colorManagement: true"
+  >
+    <a-assets>
+      <!-- src set by JS from SITES config -->
+      <video
+        id="scene-video"
+        crossorigin="anonymous"
+        loop="false"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+      ></video>
+    </a-assets>
+
+    <!-- 360° video sphere -->
+    <a-videosphere
+      id="videosphere"
+      src="#scene-video"
+      rotation="0 -90 0"
+    ></a-videosphere>
+
+    <!-- Camera with cursor for gaze interaction -->
+    <a-camera>
+      <a-cursor
+        color="#E30613"
+        fuse="false"
+      ></a-cursor>
+    </a-camera>
+
+  </a-scene>
+
+  <!-- Voiceover audio (hidden) -->
+  <audio id="voiceover-audio" preload="auto"></audio>
+
+  <!-- Scene overlay UI (sits above A-Frame canvas) -->
+  <div class="scene-ui">
+
+    <!-- Top bar: site name + mute -->
+    <div class="scene-ui-top">
+      <div>
+        <div class="scene-title" id="scene-title">Loading...</div>
+        <div class="scene-subtitle">360° Video Tour</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="ui-btn" id="mute-btn" onclick="toggleMute()">🔊 Mute</button>
+        <a href="../menu.html" class="ui-btn">✕ Menu</a>
+      </div>
+    </div>
+
+    <!-- Bottom bar: back + play/pause + photos link -->
+    <div class="scene-ui-bottom">
+      <a id="back-link" href="../menu.html" class="ui-btn">← Back</a>
+
+      <button class="ui-btn red" id="play-btn" onclick="playScene()">▶ Play</button>
+
+      <a id="photos-link" href="#" class="ui-btn">🖼 Photos</a>
+    </div>
+
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const siteId = getSiteId();
+    const site   = getSite(siteId);
+
+    // Set page title
+    document.title = site.name + " — LSBU VR";
+
+    // Populate UI labels
+    document.getElementById("scene-title").textContent = site.name;
+    document.getElementById("photos-link").href = "photos.html?site=" + siteId;
+
+    // Set video source
+    const videoEl = document.getElementById("scene-video");
+    videoEl.src = site.video;
+
+    // Wire up voiceover
+    const audioEl = document.getElementById("voiceover-audio");
+    if (site.voiceover) {
+      audioEl.src = site.voiceover;
+    }
+
+    // Hide loader once A-Frame scene is ready
+    const sceneEl = document.querySelector("a-scene");
+    sceneEl.addEventListener("loaded", () => {
+      hideLoader();
+    });
+
+    // Also hide loader on video canplay as fallback
+    videoEl.addEventListener("canplay", hideLoader, { once: true });
+
+    // Safety fallback: hide loader after 5s regardless
+    setTimeout(hideLoader, 5000);
+  </script>
+
+</body>
+</html>

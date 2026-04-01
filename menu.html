@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose a Site — LSBU VR Tour</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="menu-page">
+
+        <header class="menu-header">
+            <a href="index.html" class="back-link">← Back to Home</a>
+            <div class="header-title">
+                <span class="badge"><span class="badge-dot"></span>LSBU Open Day 2026</span>
+                <h1>Choose a Site to Explore</h1>
+                <p>Select any location below to begin your 360° immersive tour</p>
+            </div>
+        </header>
+
+        <div class="sites-grid" id="sites-grid"></div>
+
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        const ICONS = ['💻', '🎓', '📚', '🌿'];
+        const grid = document.getElementById('sites-grid');
+
+        SITES.forEach((site, i) => {
+            const card = document.createElement('a');
+            card.href = `scenes/site${site.id}.html`;
+            card.className = 'site-card';
+            card.innerHTML = `
+                <div class="card-thumb thumb${site.id}">
+                    <div class="card-number">0${site.id}</div>
+                    
+                </div>
+                <div class="card-body">
+                    <h2>${site.name}</h2>
+                    <p class="card-subtitle">${site.building}</p>
+                    <p class="card-desc">${site.description}</p>
+                    <span class="card-cta">Enter 360° Tour</span>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    </script>
+
+</body>
+
+</html>
